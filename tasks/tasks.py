@@ -3,14 +3,11 @@ from database import get_db
 from models import Base,Message
 from fastapi.responses import FileResponse,RedirectResponse
 from sqlalchemy.orm import Session
-from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 import bcrypt
 from sqlalchemy import select,desc
 from models import*
 from auth import*
-
-templates=Jinja2Templates(directory='templates')
 
 router=APIRouter()
 
