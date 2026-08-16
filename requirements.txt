@@ -4,3 +4,4 @@ uvicorn
 psycopg2
 python-multipart
 aiosqlite
+bcrypt
