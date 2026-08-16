@@ -86,7 +86,13 @@ async def send(name=Form(...), school=Form(...), category=Form(...), text=Form(.
     res=execute.first()[0]#type:ignore
     count=0
     if res.pro==True:count=5
-    target=Message(name=name, school=school, category=category,text=text, user_id=res.id, likes_count=count)
+    txt=''
+    for index,i in enumerate(text):
+        if index%70==0:
+            txt+='<br>'+i
+        else:
+            txt+=i
+    target=Message(name=name, school=school, category=category,text=txt, user_id=res.id, likes_count=count)
     db.add(target)
     await db.commit()
     return RedirectResponse('/mainpage', status_code=303)
