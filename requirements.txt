@@ -5,4 +5,4 @@ psycopg2
 python-multipart
 aiosqlite
 bcrypt
-jose[cryptography]
+python-jose[cryptography]
