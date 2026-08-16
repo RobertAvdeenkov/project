@@ -52,8 +52,15 @@ async def show(db:AsyncSession=Depends(get_db), token=Cookie()):
     res=result.all()
     if not res:
         return {'message':'Сообщений пока нет :('}
+
+    ex=select(User).filter(User.name==name)
+    result=await (db.execute(ex))
+    r=result.first()
+    if not(result or r):raise HTTPException(401,'Вы не авторизованы')
+    user=r[0] #type:ignore
     print(res)
-    txt=''
+    txt=f'<h2>Здравствуйте, {user.name}. Ваш премиум активирован<h2>' if user.pro==True else f'<h2>Здравствуйте, {user.name}.'
+    txt+='<p></p>'
     for i in res:
         target=i[0]
         ex=select(User).filter(User.id==target.user_id)
