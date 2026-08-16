@@ -2,7 +2,6 @@ from fastapi import FastAPI,Body,APIRouter,Form,Depends,Request,HTTPException,Qu
 from database import get_db
 from models import Base,Message
 from fastapi.responses import FileResponse,RedirectResponse
-import pika
 from sqlalchemy.orm import Session
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
