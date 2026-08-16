@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Обратная связь</title>
+    <style>
+        body { font-family: Arial; padding: 20px; max-width: 600px; margin: auto; }
+        input, textarea, select { width: 100%; padding: 8px; margin: 5px 0; }
+        button { padding: 10px 20px; background: #15590d; color: white; border: none; cursor: pointer; }
+        button:hover { background: #15590d; }
+    </style>
+</head>
+<body>
+    <h1>Оставить сообщение</h1>
+    <form action="/feedback" method="post">
+        <input type="text" name="name" placeholder="Ваше имя" required>
+        <input type="text" name="school" placeholder="Ваша школа" required>
+        <select name="category" required>
+            <option value="Вопрос">Вопрос</option>
+            <option value="Предложение">Предложение</option>
+            <option value="Благодарность">Благодарность</option>
+            <option value="Жалоба">Жалоба</option>
+        </select>
+        <textarea name="text" rows="4" placeholder="Ваше сообщение" required></textarea>
+        <button type="submit">Отправить</button>
+    </form>
+</body>
+</html>

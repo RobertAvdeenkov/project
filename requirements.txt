@@ -1,0 +1,8 @@
+pika
+fastapi
+sqlalchemy
+jinja2
+uvicorn
+alembic
+psycopg2
+python-multipart
