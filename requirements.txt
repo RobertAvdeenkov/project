@@ -6,3 +6,4 @@ python-multipart
 aiosqlite
 bcrypt
 python-jose[cryptography]
+asyncpg
