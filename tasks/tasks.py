@@ -55,8 +55,9 @@ async def wso(websockets:WebSocket, token=Cookie(),  db:AsyncSession=Depends(get
         raise HTTPException(401, 'Вы не зарегистрированы')
     user=result1[0]
     ip=websockets.scope['client'][0]
-    print(ip)
+    print(ip, 'IP USER')
     if not(user.ip):
+        print('no ip')
         user.ip=ip
         await db.commit()
     ex=select(Baned).filter(Baned.ip==ip)
