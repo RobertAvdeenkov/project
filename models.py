@@ -33,7 +33,7 @@ class Like(Base):
     __tablename__='likes'
     id=Column(Integer,primary_key=True)
     user_id=Column(Integer, ForeignKey('users.id'))
-    message_id=Column(Integer,ForeignKey('textUSERS.id'))
+    message_id=Column(Integer,ForeignKey('textusers.id'))
 
     user=relationship('User',back_populates='likes')
     message=relationship('Message',back_populates='likes')
