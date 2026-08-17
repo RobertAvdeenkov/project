@@ -16,7 +16,7 @@ class User(Base):
     likes=relationship('Like', back_populates='user')
 
 class Message(Base):
-    __tablename__='textUSERS'
+    __tablename__='textusers'
     id=Column(Integer,primary_key=True)
     school=Column(String)
     name=Column(String)

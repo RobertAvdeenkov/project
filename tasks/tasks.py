@@ -241,11 +241,11 @@ async def topsSHOW(db:AsyncSession=Depends(get_db), token=Cookie()):
     get_by_token(token)
     ex=text('''
     with tables as(
-    select users.name as name, COUNT(textUSERS.id) as colvo
+    select users.name as name, COUNT(textusers.id) as colvo
     from users
-    inner join textUSERS on users.id=textUSERS.user_id
+    inner join textusers on users.id=textusers.user_id
     group by users.id
-    order by COUNT(textUSERS.id) DESC
+    order by COUNT(textusers.id) DESC
     limit 10
     )
 
