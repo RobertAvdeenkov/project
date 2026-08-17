@@ -5,7 +5,7 @@
     <title>WebSocket подключение</title>
 </head>
 <body>
-    <h1>Вы находитесь в бане</h1>
+    <h1>Проверка на бан</h1>
     <p id="status">Подключение...</p>
 
     <script>
@@ -14,7 +14,7 @@
 
         // Обработчик открытия соединения
         ws.onopen = function() {
-            document.getElementById('status').textContent = 'Ваш ip адрес был заблокирован';
+            document.getElementById('status').textContent = 'Скорее всего, ваш ip был заблокирован';
             console.log('WebSocket соединение установлено');
         };
 
