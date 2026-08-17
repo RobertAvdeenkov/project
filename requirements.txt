@@ -1,9 +1,10 @@
 fastapi
 sqlalchemy
-uvicorn
+uvicorn[standard]
 psycopg2
 python-multipart
 aiosqlite
 bcrypt
 python-jose[cryptography]
 asyncpg
+websockets
