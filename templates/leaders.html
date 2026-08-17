@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Сообщения</title>
+    <title>Таблица лидеров</title>
     <style>
         body { font-family: Arial; padding: 20px; max-width: 800px; margin: auto; }
         .message { border: 1px solid #ccc; padding: 12px; margin-bottom: 10px; border-radius: 6px; }
@@ -16,10 +16,7 @@
     </style>
 </head>
 <body>
-    <h1>Все сообщения</h1>
-    <p><a href="/feedback">Написать новое</a></p>
-    <p><a href="/promo">Ввести промокод</a></p>
-    <p><a href="/tops">Лучшие авторы</a></p>
+    <h1>Лучшие авторы</h1>
     <div class="container">
                 
                 <!-- Элемент для сообщения (будет отображать data.message) -->
@@ -33,7 +30,7 @@
 <script>
             async function list() {
                 try {
-                    const response = await fetch('/messagesSHOW', {
+                    const response = await fetch('/topsSHOW', {
                         method: 'POST',
                         headers: { 
                             "Accept": "application/json", 
@@ -67,39 +64,6 @@
                 }
             }
 
-            async function like(id) {
-                const response = await fetch("/like", {
-                    method: "POST",
-                    headers: { "Accept": "application/json", "Content-Type": "application/json"},
-                    body: JSON.stringify({'id':id})
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    alert('Успешно!')
-                    location.reload()
-                } else {
-                    console.log(response);
-                }
-            }
-
-            async function unlike(id) {
-                const response = await fetch("/unlike", {
-                    method: "DELETE",
-                    headers: { "Accept": "application/json", "Content-Type": "application/json"},
-                    body: JSON.stringify({'id':id})
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    alert('Успешно!');
-                    location.reload()
-                } else {
-                    console.log(response);
-                }
-            }
-
-            // Вызываем функцию при загрузке страницы
             document.addEventListener('DOMContentLoaded', list);
         </script>
 </html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket подключение</title>
+</head>
+<body>
+    <h1>Вы находитесь в бане</h1>
+    <p id="status">Подключение...</p>
+
+    <script>
+        // Подключаемся к WebSocket
+        const ws = new WebSocket('/ws');
+
+        // Обработчик открытия соединения
+        ws.onopen = function() {
+            document.getElementById('status').textContent = 'Ваш ip адрес был заблокирован';
+            console.log('WebSocket соединение установлено');
+        };
+
+        // Обработчик получения сообщения
+        ws.onmessage = function(event) {
+            console.log('Получено:', event.data);
+            // Здесь можно обработать данные, если нужно
+        };
+
+        // Обработчик закрытия соединения
+        // Если нужно перенаправить при ошибке
+        ws.onclose = function() {
+            window.location.href = '/mainpage';  // редирект на страницу входа
+        };
+
+        // Обработчик ошибок
+        ws.onerror = function(error) {
+            console.error('Ошибка WebSocket:', error);
+            document.getElementById('status').textContent = '⚠️ Ошибка подключения';
+        };
+    </script>
+</body>
+</html>

@@ -5,9 +5,10 @@ from fastapi.responses import FileResponse,RedirectResponse
 from sqlalchemy.orm import Session
 from sqlalchemy.ext.asyncio import AsyncSession
 import bcrypt
-from sqlalchemy import select,desc
+from sqlalchemy import select,desc,text
 from models import*
 from auth import*
+from fastapi import WebSocket
 
 router=APIRouter()
 
@@ -35,13 +36,49 @@ async def reglog(data=Body(), db:AsyncSession=Depends(get_db)):
 
 @router.get('/mainRED')
 def mainRED(token=Query()):
-    response=RedirectResponse('/mainpage')
+    response=RedirectResponse('/connection')
     response.set_cookie(key='token',value=token, max_age=3600, path='/')
     return response
 
+@router.get('/connection')
+async def connection(token=Cookie()):
+    get_by_token(token)
+    return FileResponse('templates/connect.html')
+
+@router.websocket('/ws')
+async def wso(websockets:WebSocket, token=Cookie(),  db:AsyncSession=Depends(get_db)):
+    await websockets.accept()
+    name=get_by_token(token)
+    ex1=select(User).filter(User.name==name)
+    result1=(await db.execute(ex1)).first()
+    if not(result1):
+        raise HTTPException(401, 'Вы не зарегистрированы')
+    user=result1[0]
+    ip=websockets.scope['client'][0]
+    print(ip)
+    if not(user.ip):
+        user.ip=ip
+        await db.commit()
+    ex=select(Baned).filter(Baned.ip==ip)
+    result=(await db.execute(ex)).first()
+    if not(result):
+        await websockets.close()
+    else:
+        return {'Сообщение':'В данный момент вы находитесь в бане.'}
+
 @router.get('/mainpage')
 async def root(request:Request,db:AsyncSession=Depends(get_db), token=Cookie()):
-    get_by_token(token)
+    name=get_by_token(token)
+
+    ex1=select(User).filter(User.name==name)
+    result1=(await db.execute(ex1)).first()
+    if not(result1):
+        raise HTTPException(401, 'Вы не зарегистрированы')
+    user=result1[0]
+    ex=select(Baned).filter(Baned.ip==user.ip)
+    result=(await db.execute(ex)).first()
+    if result:
+        return RedirectResponse('/')
     return FileResponse('templates/messages.html')
 
 @router.post('/messagesSHOW')
@@ -192,3 +229,38 @@ async def enter(token=Cookie(), promo=Form(...), db:AsyncSession=Depends(get_db)
     await db.delete(promocode)
     await db.commit()
     return RedirectResponse('/mainpage', status_code=303)
+
+@router.get('/tops')
+async def top(token=Cookie()):
+    get_by_token(token)
+    return FileResponse('templates/leaders.html')
+
+@router.post('/topsSHOW')
+async def topsSHOW(db:AsyncSession=Depends(get_db), token=Cookie()):
+    get_by_token(token)
+    ex=text('''
+    with tables as(
+    select users.name as name, COUNT(textUSERS.id) as colvo
+    from users
+    inner join textUSERS on users.id=textUSERS.user_id
+    group by users.id
+    order by COUNT(textUSERS.id) DESC
+    limit 10
+    )
+
+    select name,
+    colvo,
+    row_number() over() as stage
+    from tables
+    ''')
+    execute=(await (db.execute(ex))).all()
+    if not(execute):
+        return {'message':'<h2>Лидеров пока нет. Стань первым!<h2>'}
+    txt=''
+    for i in execute:
+        txt+=f'<h2 style="color: {"#bcb645" if i[2]==1 else ''}{'gray;' if i[2]==2 else ''}{'#ff8e37' if i[2]==3 else ''}{"black;" if i[2]>3 else ''}">№{i[2]}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Имя: {i[0]}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Всего сообщений: {i[1]}<h2><p></p>'
+    return {'message':txt}
+    
+    
+
+

@@ -10,6 +10,8 @@ class User(Base):
     password=Column(String)
     pro=Column(Boolean, default=False, nullable=False)
 
+    ip=Column(String)
+
     messages=relationship('Message', back_populates='user')
     likes=relationship('Like', back_populates='user')
 
@@ -41,3 +43,8 @@ class Promo(Base):
     id=Column(Integer,primary_key=True)
     value=Column(String)
     status=Column(Boolean,default=True)
+
+class Baned(Base):
+    __tablename__='banned'
+    id=Column(Integer,primary_key=True)
+    ip=Column(String)
