@@ -8,9 +8,10 @@ class User(Base):
     id=Column(Integer,primary_key=True)
     name=Column(String)
     password=Column(String)
-    pro=Column(Boolean, default=False, nullable=False)
+    pro=Column(Integer, default=0, nullable=False)
 
     ip=Column(String)
+    until=Column(DateTime, default=None)
 
     messages=relationship('Message', back_populates='user')
     likes=relationship('Like', back_populates='user')
@@ -42,7 +43,7 @@ class Promo(Base):
     __tablename__='promo'
     id=Column(Integer,primary_key=True)
     value=Column(String)
-    status=Column(Boolean,default=True)
+    level=Column(Integer, default=1)
 
 class Baned(Base):
     __tablename__='banned'

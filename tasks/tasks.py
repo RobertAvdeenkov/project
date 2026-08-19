@@ -5,12 +5,17 @@ from fastapi.responses import FileResponse,RedirectResponse
 from sqlalchemy.orm import Session
 from sqlalchemy.ext.asyncio import AsyncSession
 import bcrypt
-from sqlalchemy import select,desc,text
+from sqlalchemy import select,desc,text,func
 from models import*
 from auth import*
 from fastapi import WebSocket
+from datetime import datetime,timedelta
+import asyncio
 
 router=APIRouter()
+
+connections=set()
+chat_con=[]
 
 @router.get('/')
 def main():
@@ -21,7 +26,6 @@ async def reglog(data=Body(), db:AsyncSession=Depends(get_db)):
     ex=select(User).filter(User.name==data['name'])
     execute=await db.execute(ex)
     result=execute.first()
-    print(result)
     if not(result):
         target=User(name=data['name'], password=bcrypt.hashpw(data['password'].encode(), bcrypt.gensalt()).decode())
         db.add(target)
@@ -55,27 +59,26 @@ async def wso(websockets:WebSocket, token=Cookie(),  db:AsyncSession=Depends(get
         raise HTTPException(401, 'Вы не зарегистрированы')
     user=result1[0]
     ip=websockets.scope['client'][0]
-    print(ip, 'IP USER')
     if not(user.ip):
-        print('no ip')
         user.ip=ip
         await db.commit()
     ex=select(Baned).filter(Baned.ip==ip)
     result=(await db.execute(ex)).first()
-    if not(result):
-        await websockets.close()
+    if result:
+        await websockets.send_text('OK')
     else:
-        return {'Сообщение':'В данный момент вы находитесь в бане.'}
+        connections.add(websockets)
+        await websockets.close()
 
 @router.get('/mainpage')
 async def root(request:Request,db:AsyncSession=Depends(get_db), token=Cookie()):
     name=get_by_token(token)
-
     ex1=select(User).filter(User.name==name)
     result1=(await db.execute(ex1)).first()
     if not(result1):
         raise HTTPException(401, 'Вы не зарегистрированы')
     user=result1[0]
+    await check_prem(user)
     ex=select(Baned).filter(Baned.ip==user.ip)
     result=(await db.execute(ex)).first()
     if result:
@@ -90,25 +93,35 @@ async def show(db:AsyncSession=Depends(get_db), token=Cookie()):
     res=result.all()
     if not res:
         return {'message':'Сообщений пока нет :('}
-
+    data=datetime.now()
+    ex1=select(func.count()).select_from(Message).filter(Message.created_at<datetime(year=data.year,month=data.month,day=data.day+1), Message.created_at>datetime(year=data.year,month=data.month,day=data.day))
+    counts=await db.scalar(ex1)
+    likes=await db.scalar(select(func.count()).select_from(Like))
     ex=select(User).filter(User.name==name)
     result=await (db.execute(ex))
     r=result.first()
     if not(result or r):raise HTTPException(401,'Вы не авторизованы')
     user=r[0] #type:ignore
-    print(res)
-    txt=f'<h2>Здравствуйте, {user.name}. Ваш премиум активирован<h2>' if user.pro==True else f'<h2>Здравствуйте, {user.name}.'
+    if data.month>=6:
+        dataresult=datetime(year=data.year+1, month=6, day=1)-data
+    else:
+        dataresult=datetime(year=data.year, month=6, day=1)-data
+
+    prem=select(User).filter(User.pro>0)
+    prem_count=(await db.execute(prem)).fetchall()
+    txt='<a href="/chat">Закрытый чат</a>' if user.pro==2 else ''
+    txt+=f'<h2>Здравствуйте, {user.name}. Ваш премиум активирован<h2>' if user.pro>0 else f'<h2>Здравствуйте, {user.name}.'
     txt+='<p></p>'
+    txt+=f'<h3>Сегодня написано: {counts} постов<br>Всего поставлено лайков: {likes}<br>Школьников в теме: {len(connections)}<br>Обладателей премиума: {len(prem_count)}<br>Дней до 1 июля: {dataresult.days}<h3><p></p>'
     for i in res:
         target=i[0]
         ex=select(User).filter(User.id==target.user_id)
         result=await (db.execute(ex))
         user=result.first()[0] #type:ignore
-        print('#ffcc00' if user.pro==True else '#15590d')
         txt+=f'''
         <div class="message">
             <div class="category">{target.category}</div>
-            <strong class="{'premium' if user.pro==True else ''}">{f'{target.name} 🌟' if user.pro==True else target.name}</strong> — {target.text}
+            <strong class="{'premium' if user.pro>1 else ''}">{f'{target.name} 🌟' if user.pro>1 else target.name}</strong> — {target.text}
             <div class="date">{target.created_at}</div>
             <p></p>
             <strong>{target.likes_count} лайков</strong>
@@ -123,14 +136,54 @@ async def show(db:AsyncSession=Depends(get_db), token=Cookie()):
 async def feedback():
     return FileResponse('templates/feedback.html')
 
+@router.get('/chat')
+async def chat(token=Cookie(), db:AsyncSession=Depends(get_db)):
+    nam=get_by_token(token)
+    ex=select(User).filter(User.name==nam)
+    execute=await db.execute(ex)
+    res=execute.first()
+    if not(res):
+        return RedirectResponse('/')
+    user=res[0]
+    await check_prem(user)
+    if user.pro<2:return RedirectResponse('/')
+    return FileResponse('templates/secret.html')
+
+@router.websocket('/chatws')
+async def chatws(websocket:WebSocket, db:AsyncSession=Depends(get_db), token=Cookie()):
+    await websocket.accept()
+    nam=get_by_token(token)
+    ex=select(User).filter(User.name==nam)
+    execute=await db.execute(ex)
+    res=execute.first()
+    if not(res):
+        await websocket.close()
+        return RedirectResponse('/')
+    user=res[0]
+    await check_prem(user)
+    if user.pro<2:
+        await websocket.close()
+        return RedirectResponse('/')
+    chat_con.append(websocket)
+    try:
+        while True:
+            data=await websocket.receive_text()
+            for i in chat_con:
+                await i.send_text(f'{nam}: {data}')
+    except:
+        if websocket in chat_con:
+            chat_con.remove(websocket)
+        await websocket.close()
+
 @router.post('/feedback')
 async def send(name=Form(...), school=Form(...), category=Form(...), text=Form(...), db:AsyncSession=Depends(get_db), token=Cookie()):
     nam=get_by_token(token)
     ex=select(User).filter(User.name==nam)
     execute=await db.execute(ex)
     res=execute.first()[0]#type:ignore
+    await check_prem(res)
     count=0
-    if res.pro==True:count=5
+    if res.pro>0:count=5
     txt=''
     for index,i in enumerate(text):
         if index%70==0:
@@ -151,7 +204,7 @@ async def like(data=Body(), db:AsyncSession=Depends(get_db), token=Cookie()):
     if not(res):
         raise HTTPException(401, 'Такого пользователя нету!')
     user=res[0]
-
+    await check_prem(user)
     ex=select(Like).filter(Like.user_id==user.id, Like.message_id==data['id'])
     result=await (db.execute(ex))
     res=result.first()
@@ -164,7 +217,7 @@ async def like(data=Body(), db:AsyncSession=Depends(get_db), token=Cookie()):
     result=await (db.execute(ex))
     res=result.first()
     post=res[0] #type:ignore
-    if user.pro==True:
+    if user.pro>0:
         post.likes_count+=5
     else:
         post.likes_count+=1
@@ -182,7 +235,7 @@ async def unlike(data=Body(), db:AsyncSession=Depends(get_db), token=Cookie()):
     if not(res):
         raise HTTPException(401, 'Такого пользователя нету!')
     user=res[0]
-
+    await check_prem(user)
     ex=select(Like).filter(Like.user_id==user.id, Like.message_id==data['id'])
     result=await (db.execute(ex))
     res=result.first()
@@ -193,7 +246,7 @@ async def unlike(data=Body(), db:AsyncSession=Depends(get_db), token=Cookie()):
     result=await (db.execute(ex))
     res=result.first()
     post=res[0] #type:ignore
-    if user.pro==True:
+    if user.pro>0:
         post.likes_count-=5
     else:
         post.likes_count-=1
@@ -218,15 +271,16 @@ async def enter(token=Cookie(), promo=Form(...), db:AsyncSession=Depends(get_db)
     if not(res):
         return RedirectResponse('/mainpage', status_code=303)
     user=res[0]
-    if user.pro==True: raise HTTPException(400,'Вы уже обладатель премиума')
-
+    await check_prem(user)
     ex=select(Promo).filter(Promo.value==promo)
     result=await (db.execute(ex))
     res=result.first()
     if not(res):
         return RedirectResponse('/mainpage', status_code=303)
     promocode=res[0]
-    user.pro=True
+    if user.pro>=promocode.level: raise HTTPException(400,'Вы уже обладатель премиума')
+    user.pro=promocode.level
+    user.until=datetime.utcnow()
     await db.delete(promocode)
     await db.commit()
     return RedirectResponse('/mainpage', status_code=303)

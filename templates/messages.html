@@ -28,6 +28,24 @@
         <div id="content">
                     <!-- Сюда будет вставляться полный блок -->
         </div>
+        <footer style="margin-top: 50px; font-size: 12px; color: #888; border-top: 1px solid #ddd; padding-top: 20px;">
+            <p>⚠️ <a href="#" onclick="showRules()" style="color: #888; text-decoration: underline;">Простые правила</a></p>
+            <div id="rules" style="display: none; background: #f9f9f9; padding: 15px; border-radius: 8px; margin-top: 10px;">
+                <p><strong></strong> Давайте не будем наживать врагов соблюдая 5 простых правил:</p>
+                <p><strong>1.</strong> Никакой политики, религии и агрессии.</p>
+                <p><strong>2.</strong> Никакого буллинга.</p>
+                <p><strong>3.</strong> Ты — анонимен.</p>
+                <p><strong>4.</strong> Админ всегда прав.</p>
+                <p><strong>5.</strong> Сайт создан для прикола.</p>
+                <p><strong></strong> Нарушение правил ведет к перманентному бану. Баниться не только аккаунт, но и весь IP адрес</p>
+            </div>
+            <script>
+                function showRules() {
+                    var rules = document.getElementById('rules');
+                    rules.style.display = rules.style.display === 'none' ? 'block' : 'none';
+                }
+            </script>
+        </footer>
     </div>
 </body>
 <script>
@@ -99,7 +117,9 @@
                 }
             }
 
+            
             // Вызываем функцию при загрузке страницы
             document.addEventListener('DOMContentLoaded', list);
+
         </script>
 </html>
