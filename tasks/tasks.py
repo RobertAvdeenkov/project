@@ -5,7 +5,7 @@ from fastapi.responses import FileResponse,RedirectResponse
 from sqlalchemy.orm import Session
 from sqlalchemy.ext.asyncio import AsyncSession
 import bcrypt
-from sqlalchemy import select,desc,text,func
+from sqlalchemy import select,desc,text,func,or_
 from models import*
 from auth import*
 from fastapi import WebSocket
@@ -86,9 +86,10 @@ async def root(request:Request,db:AsyncSession=Depends(get_db), token=Cookie()):
     return FileResponse('templates/messages.html')
 
 @router.post('/messagesSHOW')
-async def show(db:AsyncSession=Depends(get_db), token=Cookie()):
+async def show(db:AsyncSession=Depends(get_db), token=Cookie(), filt=Body()):
+    filters=filt['filter']
     name=get_by_token(token)
-    ex=select(Message).order_by(desc(Message.likes_count), desc(Message.created_at))
+    ex=select(Message).filter(or_(Message.text.ilike(f'%{filters}%'))).order_by(desc(Message.likes_count), desc(Message.created_at))
     result=await (db.execute(ex))
     res=result.all()
     if not res:
@@ -109,7 +110,7 @@ async def show(db:AsyncSession=Depends(get_db), token=Cookie()):
 
     prem=select(User).filter(User.pro>0)
     prem_count=(await db.execute(prem)).fetchall()
-    txt='<a href="/chat">Закрытый чат</a>' if user.pro==2 else ''
+    txt='<a href="/chat" style="font-size: 20px; background-color: #15590d; color:#f9f9f9;text-decoration: none;">Закрытый чат</a>' if user.pro==2 else ''
     txt+=f'<h2>Здравствуйте, {user.name}. Ваш премиум активирован<h2>' if user.pro>0 else f'<h2>Здравствуйте, {user.name}.'
     txt+='<p></p>'
     txt+=f'<h3>Сегодня написано: {counts} постов<br>Всего поставлено лайков: {likes}<br>Школьников в теме: {len(connections)}<br>Обладателей премиума: {len(prem_count)}<br>Дней до 1 июля: {dataresult.days}<h3><p></p>'

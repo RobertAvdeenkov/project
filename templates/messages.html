@@ -5,7 +5,7 @@
     <title>Сообщения</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { font-family: Arial; padding: 20px; max-width: 800px; margin: auto; }
+        body { font-family: Arial; padding: 20px; max-width: 800px; margin: auto; text-align: center; padding-top: 60px;}
         .message { border: 1px solid #ccc; padding: 12px; margin-bottom: 10px; border-radius: 6px; }
         .category { font-weight: bold; color: #15590d; }
         .date { font-size: 12px; color: #888; }
@@ -14,14 +14,32 @@
             color: #ffcc00;
             font-weight: bold;
         }
+        hr{height: 10px; background-color: #15590d; width: 100%;}
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 1000;
+            background-color: #15590d;
+        }
     </style>
 </head>
 <body>
-    <h1>Все сообщения</h1>
-    <p><a href="/feedback">Написать новое</a></p>
-    <p><a href="/promo">Ввести промокод</a></p>
-    <p><a href="/tops">Лучшие авторы</a></p>
-    <p><a href="https://t.me/+Al3PSSStlsM2ZmIy">Наш телеграмм канал</a></p>
+    <h1>Добро пожаловать в Школьного призрака</h1>
+    <hr>
+    <h2>Поиск по ключевым словам</h2>
+    <input id="finder" placeholder="Поиск...">
+    <p><button onclick="list()">Искать</button></p>
+    <hr>
+    <header>
+        <a href="/feedback" style="color: #15590d; background-color: #f9f9f9; text-underline-offset: auto; text-decoration: none;">Написать новое</a>
+        <a href="/promo" style="color: #15590d; background-color: #f9f9f9; text-underline-offset: auto; text-decoration: none;">Ввести промокод</a>
+        <a href="/tops" style="color: #15590d; background-color: #f9f9f9; text-underline-offset: auto; text-decoration: none;">Лучшие авторы</a>
+        <a href="https://t.me/+Al3PSSStlsM2ZmIy" style="color: #15590d; background-color: #f9f9f9; text-underline-offset: auto; text-decoration: none;">Наш телеграмм канал</a>
+    </header>
     <div class="container">
                 
                 <!-- Элемент для сообщения (будет отображать data.message) -->
@@ -52,13 +70,15 @@
 </body>
 <script>
             async function list() {
+                const data= document.getElementById('finder').value;
                 try {
                     const response = await fetch('/messagesSHOW', {
                         method: 'POST',
                         headers: { 
                             "Accept": "application/json", 
                             "Content-Type": "application/json"
-                        }
+                        },
+                        body:JSON.stringify({'filter':data})
                     });
 
                     if (response.ok) {
@@ -119,7 +139,6 @@
                 }
             }
 
-            
             // Вызываем функцию при загрузке страницы
             document.addEventListener('DOMContentLoaded', list);
 
