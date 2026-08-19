@@ -67,7 +67,8 @@ async def wso(websockets:WebSocket, token=Cookie(),  db:AsyncSession=Depends(get
     if result:
         await websockets.send_text('OK')
     else:
-        connections.add(websockets)
+        connections.add(ip)
+        print(connections)
         await websockets.close()
 
 @router.get('/mainpage')
