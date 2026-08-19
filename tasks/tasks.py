@@ -168,8 +168,14 @@ async def chatws(websocket:WebSocket, db:AsyncSession=Depends(get_db), token=Coo
     try:
         while True:
             data=await websocket.receive_text()
+            txt=''
+            for index,i in enumerate(data):
+                if index%50==0 and index!=0:
+                    txt+='<br>'+i
+                else:
+                    txt+=i
             for i in chat_con:
-                await i.send_text(f'{nam}: {data}')
+                await i.send_text(f'{nam}: {txt}')
     except:
         if websocket in chat_con:
             chat_con.remove(websocket)
