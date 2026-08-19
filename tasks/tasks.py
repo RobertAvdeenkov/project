@@ -171,7 +171,7 @@ async def chatws(websocket:WebSocket, db:AsyncSession=Depends(get_db), token=Coo
             txt=''
             for index,i in enumerate(data):
                 if index%50==0 and index!=0:
-                    txt+='<br>'+i
+                    txt+='\n'+i
                 else:
                     txt+=i
             for i in chat_con:
