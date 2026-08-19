@@ -58,7 +58,11 @@ async def wso(websockets:WebSocket, token=Cookie(),  db:AsyncSession=Depends(get
     if not(result1):
         raise HTTPException(401, 'Вы не зарегистрированы')
     user=result1[0]
-    ip=websockets.scope['client'][0]
+    txt=websockets.scope['client'][0].split('.')[0:-1]
+    ip=''
+    for i in txt:
+        ip+=i+'.'
+    ip=ip[0:-1]
     if not(user.ip):
         user.ip=ip
         await db.commit()
