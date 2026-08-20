@@ -10,9 +10,25 @@
         button{ font-weight: bold; color: #ffffff; background-color: #15590d;}
         button:hover { background: #1f7a14; }
         hr{height: 10px; background-color: #15590d;}
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 1000;
+            background-color: #15590d;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
+    <header>
+        <a href="/feedback" style="color: #ffffff; text-underline-offset: auto; text-decoration: none; padding: 20px;">Написать новое</a>
+        <a href="/promo" style="color: #ffffff; text-underline-offset: auto; text-decoration: none;padding: 20px;">Ввести промокод</a>
+        <a href="/tops" style="color: #ffffff; text-underline-offset: auto; text-decoration: none;padding: 20px;">Лучшие авторы</a>
+        <a href="https://t.me/+Al3PSSStlsM2ZmIy" style="color: #ffffff; text-underline-offset: auto; text-decoration: none;padding: 20px;">Наш телеграмм канал</a>
+    </header>
     <h1>Ввести промокод</h1>
     <form action="/enter" method="post">
         <input type="text" name="promo" placeholder="Ваш промокод" required>

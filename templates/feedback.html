@@ -9,9 +9,24 @@
         input, textarea, select { width: 100%; padding: 8px; margin: 5px 0; }
         button { padding: 10px 20px; background: #15590d; color: white; border: none; cursor: pointer; }
         button:hover { background: #15590d; }
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 1000;
+            background-color: #15590d;
+        }
     </style>
 </head>
 <body>
+    <header>
+        <a href="/feedback" style="color: #ffffff; text-underline-offset: auto; text-decoration: none; padding: 20px;">Написать новое</a>
+        <a href="/promo" style="color: #ffffff; text-underline-offset: auto; text-decoration: none;padding: 20px;">Ввести промокод</a>
+        <a href="/tops" style="color: #ffffff; text-underline-offset: auto; text-decoration: none;padding: 20px;">Лучшие авторы</a>
+        <a href="https://t.me/+Al3PSSStlsM2ZmIy" style="color: #ffffff; text-underline-offset: auto; text-decoration: none;padding: 20px;">Наш телеграмм канал</a>
+    </header>
     <h1>Оставить сообщение</h1>
     <form action="/feedback" method="post">
         <input type="text" name="name" placeholder="Ваше имя" required>
