@@ -19,6 +19,7 @@
             z-index: 1000;
             background-color: #15590d;
             text-align: center;
+            padding: 20px;
         }
     </style>
 </head>
@@ -26,7 +27,7 @@
     <header>
         <a href="/feedback" style="color: #ffffff; text-underline-offset: auto; text-decoration: none; padding: 20px;">Написать новое</a>
         <a href="/promo" style="color: #ffffff; text-underline-offset: auto; text-decoration: none;padding: 20px;">Ввести промокод</a>
-        <a href="/tops" style="color: #ffffff; text-underline-offset: auto; text-decoration: none;padding: 20px;">Лучшие авторы</a>
+        <a href="/tops" style="color: #ffffff; text-underline-offset: auto; text-decoration: none;padding: 40px;">Лучшие авторы</a>
         <a href="https://t.me/+Al3PSSStlsM2ZmIy" style="color: #ffffff; text-underline-offset: auto; text-decoration: none;padding: 20px;">Наш телеграмм канал</a>
     </header>
     <h1>Ввести промокод</h1>
@@ -38,6 +39,22 @@
     <h3>Промокоды мог дать вам премиум статус, которые имеет два уровня:<br></h3>
     <h4>1 уровень:<br><br>1. При создании поста он получает 5 лайков автоматически<br>2. Один лайк премиума - 5 лайков<br><br><br>2 Уровень:<br><br>1. Все привилегии 1 уровеня<br>2. Доступ к закрытому чату сайта<br>3. Ваше введенное имя будет отображаться другим цветом и будет помечено "🌟"</h4>
     <h3>Промокоды действуют в течение 1 месяца, после чего премиум отключается</h3>
-    <h3>По поповду покупки и остальных вопросах писать в Телеграмм: @SchooGhost_bot</h3>
+    <footer style="margin-top: 50px; font-size: 12px; color: #888; border-top: 1px solid #ddd; padding-top: 20px;">
+            <p>⚠️ <a href="#" onclick="showRules()" style="color: #888; text-decoration: underline;">ИНСТРУКЦИЯ ПО АКТИВАЦИИ</a></p>
+            <div id="rules" style="display: none; background: #f9f9f9; padding: 15px; border-radius: 8px; margin-top: 10px;">
+                <p><strong>1.</strong> Посетите @SchooGhost_bot в Телеграмм</p>
+                <p><strong>2.</strong> Напишите свой никнейм и желаемый уровень</p>
+                <p><strong>3.</strong> Получите промокод</p>
+                <p><strong>4.</strong> Введите промокод в поле ввода сверху</p>
+                <p><strong>5.</strong> Наслаждайтесь премиумом</p>
+                <p><strong></strong> Если что-то пошло не так, то мы всегда найдем способ это исправить</p>
+            </div>
+            <script>
+                function showRules() {
+                    var rules = document.getElementById('rules');
+                    rules.style.display = rules.style.display === 'none' ? 'block' : 'none';
+                }
+            </script>
+    </footer>
 </body>
 </html>
