@@ -5,16 +5,16 @@
     <title>Сообщения</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { font-family: Arial; padding: 20px; max-width: 800px; margin: auto; text-align: center; padding-top: 60px;}
+        body { font-family: Arial; padding: 20px; max-width: 800px; margin: auto; text-align: center; padding-top: 60px; background-color: black; font-family: 'Courier New', monospace;}
         .message { border: 1px solid #ccc; padding: 12px; margin-bottom: 10px; border-radius: 6px; }
-        .category { font-weight: bold; color: #15590d; }
+        .category { font-weight: bold; color: #ffcc00; }
         .date { font-size: 12px; color: #888; }
-        button{ font-weight: bold; color: #ffffff; background-color: #15590d;}
+        button{ font-weight: bold; color: black; background-color: #ffcc00;}
         .premium {
-            color: #ffcc00;
+            color:  #097db8;
             font-weight: bold;
         }
-        hr{height: 10px; background-color: #15590d; width: 100%;}
+        hr{height: 10px; background-color: #ffcc00; width: 100%;}
 
         header {
             position: fixed;
@@ -23,9 +23,16 @@
             width: 100%;
             background: #fff;
             z-index: 1000;
-            background-color: #15590d;
+            background-color: #ffcc00;
             padding: 20px;
         }
+
+        h1{color: #ffcc00;}
+        h2{color:#ffcc00;}
+        h3{color: #ffcc00;}
+        h4{color: #ffcc00;}
+        a{color: black;}
+        input{background-color: #262626; color: #ffcc00;}
     </style>
 </head>
 <body>
@@ -36,11 +43,11 @@
     <p><button onclick="list()">Искать</button></p>
     <hr>
     <header>
-        <a href="/feedback" style="color: #ffffff; text-underline-offset: auto; text-decoration: none;">Написать новое</a>
-        <a href="/promo" style="color: #ffffff; text-underline-offset: auto; text-decoration: none;">Ввести промокод</a>
+        <a href="/feedback" style="color: #000000; text-underline-offset: auto; text-decoration: none;">Написать новое</a>
+        <a href="/promo" style="color: #000000; text-underline-offset: auto; text-decoration: none;">Ввести промокод</a>
         <p></p>
-        <a href="/tops" style="color: #ffffff; text-underline-offset: auto; text-decoration: none;">Лучшие авторы</a>
-        <a href="https://t.me/+Al3PSSStlsM2ZmIy" style="color: #ffffff; text-underline-offset: auto; text-decoration: none;">Наш телеграмм канал</a>
+        <a href="/tops" style="color: #000000; text-underline-offset: auto; text-decoration: none;">Лучшие авторы</a>
+        <a href="https://t.me/+Al3PSSStlsM2ZmIy" style="color: #000000; text-underline-offset: auto; text-decoration: none;">Наш телеграмм канал</a>
     </header>
     <div class="container">
                 
@@ -50,9 +57,9 @@
         <div id="content">
                     <!-- Сюда будет вставляться полный блок -->
         </div>
-        <footer style="margin-top: 50px; font-size: 12px; color: #888; border-top: 1px solid #ddd; padding-top: 20px;">
-            <p>⚠️ <a href="#" onclick="showRules()" style="color: #888; text-decoration: underline;">Простые правила</a></p>
-            <div id="rules" style="display: none; background: #f9f9f9; padding: 15px; border-radius: 8px; margin-top: 10px;">
+        <footer style="margin-top: 50px; font-size: 12px; color: #ffcc00; border-top: 1px solid #ddd; padding-top: 20px;">
+            <p>⚠️ <a href="#" onclick="showRules()" style="color: #ffcc00; text-decoration: underline;">Простые правила</a></p>
+            <div id="rules" style="display: none; background: #262626; padding: 15px; border-radius: 8px; margin-top: 10px;">
                 <p><strong></strong> Давайте не будем наживать врагов соблюдая 5 простых правил:</p>
                 <p><strong>1.</strong> Никакой политики, религии и агрессии.</p>
                 <p><strong>2.</strong> Никакого буллинга.</p>

@@ -98,7 +98,7 @@ async def show(db:AsyncSession=Depends(get_db), token=Cookie(), filt=Body()):
     result=await (db.execute(ex))
     res=result.all()
     if not res:
-        return {'message':'Сообщений пока нет :('}
+        return {'message':'<h2>Сообщений пока нет :(<h2>'}
     data=datetime.now()
     ex1=select(func.count()).select_from(Message).filter(Message.created_at<datetime(year=data.year,month=data.month,day=data.day+1), Message.created_at>datetime(year=data.year,month=data.month,day=data.day))
     counts=await db.scalar(ex1)
@@ -115,7 +115,7 @@ async def show(db:AsyncSession=Depends(get_db), token=Cookie(), filt=Body()):
 
     prem=select(User).filter(User.pro>0)
     prem_count=(await db.execute(prem)).fetchall()
-    txt='<a href="/chat" style="font-size: 20px; background-color: #15590d; color:#f9f9f9;text-decoration: none;">Закрытый чат</a>' if user.pro==2 else ''
+    txt='<a href="/chat" style="font-size: 20px; background-color: #ffcc00; color:#000000;text-decoration: none;">Закрытый чат</a>' if user.pro==2 else ''
     txt+=f'<h2>Здравствуйте, {user.name}. Ваш премиум активирован<h2>' if user.pro>0 else f'<h2>Здравствуйте, {user.name}.'
     txt+='<p></p>'
     txt+=f'<h3>Сегодня написано: {counts} постов<br>Всего поставлено лайков: {likes}<br>Школьников в теме: {len(connections)}<br>Обладателей премиума: {len(prem_count)}<br>Дней до 1 июля: {dataresult.days}<h3><p></p>'
@@ -325,7 +325,7 @@ async def topsSHOW(db:AsyncSession=Depends(get_db), token=Cookie()):
         return {'message':'<h2>Лидеров пока нет. Стань первым!<h2>'}
     txt=''
     for i in execute:
-        txt+=f'<h2 style="color: {"#bcb645" if i[2]==1 else ''}{'gray;' if i[2]==2 else ''}{'#ff8e37' if i[2]==3 else ''}{"black;" if i[2]>3 else ''}">№{i[2]}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Имя: {i[0]}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Всего сообщений: {i[1]}<h2><p></p>'
+        txt+=f'<h2 style="color: {"#bcb645" if i[2]==1 else ''}{'gray;' if i[2]==2 else ''}{'#ff8e37' if i[2]==3 else ''}{"#88837e" if i[2]>3 else ''}">№{i[2]}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Имя: {i[0]}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Всего сообщений: {i[1]}<h2><p></p>'
     return {'message':txt}
     
     
