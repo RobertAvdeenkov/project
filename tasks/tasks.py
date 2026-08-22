@@ -127,7 +127,7 @@ async def show(db:AsyncSession=Depends(get_db), token=Cookie(), filt=Body()):
         txt+=f'''
         <div class="message">
             <div class="category">{target.category}</div>
-            <strong class="{'premium' if user.pro>1 else ''}">{f'{target.name} 🌟' if user.pro>1 else target.name}</strong> — {target.text}
+            <strong class="{'premium' if user.pro>1 else ''}">{f'{target.name}🌟' if user.pro>1 else target.name} из {target.school}</strong> — {target.text}
             <div class="date">{target.created_at}</div>
             <p></p>
             <strong>{target.likes_count} лайков</strong>

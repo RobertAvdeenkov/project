@@ -5,8 +5,12 @@
     <title>Промокоды</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        @keyframes typewriter {
+            from { width: 0; }
+            to { width: 100%; }
+        }
         body { font-family: Arial; padding: 20px; max-width: 600px; margin: auto; background-color: #000000; font-family: 'Courier New', monospace;}
-        input, textarea, select { width: 100%; padding: 8px; margin: 5px 0; background-color: #262626; color: #ffcc00;}
+        input, textarea, select { width: 100%; padding: 8px; margin: 5px 0; background-color: #262626; color: #ffcc00; font-family: 'Courier New', monospace;}
         button{ font-weight: bold; color: #000000; background-color: #ffcc00;}
         button:hover { background: #c4b26b; }
         hr{height: 10px; background-color: #ffcc00;}
@@ -24,11 +28,29 @@
 
         h1{
             color: #ffcc00;
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typewriter 3s steps(30) 1s 1 normal both;
         }
 
-        h2{color: #ffcc00;}
-        h3{color: #ffcc00;}
-        h4{color: #ffcc00;}
+        h2{color: #ffcc00;
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typewriter 1s steps(30) 1s 1 normal both;}
+        h3{
+            color: #ffcc00;
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typewriter 0.5s steps(10000) 0.5s 1 normal both;
+            width: none;}
+        h4{
+            color: #ffcc00;
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typewriter 0.5s steps(10000) 0.5s 1 normal both;
+            width: none;
+        }
+
     </style>
 </head>
 <body>
@@ -45,9 +67,9 @@
         <button type="submit">Ввести</button>
     </form>
     <hr>
-    <h3>Промокоды мог дать вам премиум статус, которые имеет два уровня:<br></h3>
+    <h3>Промокоды мог дать вам премиум статус,<br> которые имеет два уровня:<br></h3>
     <h4>1 уровень:<br><br>1. При создании поста он получает 5 лайков автоматически<br>2. Один лайк премиума - 5 лайков<br><br><br>2 Уровень:<br><br>1. Все привилегии 1 уровеня<br>2. Доступ к закрытому чату сайта<br>3. Ваше введенное имя будет отображаться другим цветом и будет помечено "🌟"</h4>
-    <h3>Промокоды действуют в течение 1 месяца, после чего премиум отключается</h3>
+    <h3>Промокоды действуют в течение 1 месяца, после<br> чего премиум отключается</h3>
     <footer style="margin-top: 50px; font-size: 12px; color: #ffcc00; border-top: 1px solid #ddd; padding-top: 20px;">
             <p>⚠️ <a href="#" onclick="showRules()" style="color: #ffcc00; text-decoration: underline;">ИНСТРУКЦИЯ ПО АКТИВАЦИИ</a></p>
             <div id="rules" style="display: none; background: #262626; padding: 15px; border-radius: 8px; margin-top: 10px;">
