@@ -325,7 +325,7 @@ async def topsSHOW(db:AsyncSession=Depends(get_db), token=Cookie()):
         return {'message':'<h2>Лидеров пока нет. Стань первым!<h2>'}
     txt=''
     for i in execute:
-        txt+=f'<h2 style="color: {"#bcb645" if i[2]==1 else ''}{'gray;' if i[2]==2 else ''}{'#ff8e37' if i[2]==3 else ''}{"#88837e" if i[2]>3 else ''}">№{i[2]}&nbsp;&nbsp;&nbsp;Имя: {i[0]}&nbsp;&nbsp;&nbsp;Сообщений: {i[1]}<h2><p></p>'
+        txt+=f'<h2 style="color: {"#bcb645" if i[2]==1 else ''}{'gray;' if i[2]==2 else ''}{'#ff8e37' if i[2]==3 else ''}{"#88837e" if i[2]>3 else ''}">№{i[2]}&nbsp;&nbsp;Имя: {i[0]}&nbsp;&nbsp;Сообщений: {i[1]}<h2><p></p>'
     return {'message':txt}
     
     
