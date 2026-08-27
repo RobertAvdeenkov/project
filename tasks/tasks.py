@@ -116,7 +116,7 @@ async def show(db:AsyncSession=Depends(get_db), token=Cookie(), filt=Body()):
     prem=select(User).filter(User.pro>0)
     prem_count=(await db.execute(prem)).fetchall()
     txt='<a href="/chat" style="font-size: 20px; background-color: #ffcc00; color:#000000;text-decoration: none;">Закрытый чат</a>' if user.pro==2 else ''
-    txt+=f'<h2>Здравствуйте, {user.name}. Ваш премиум активирован<h2>' if user.pro>0 else f'<h2>Здравствуйте, {user.name}.'
+    txt+=f'<h2>Здравствуйте, {user.name}.<br> Ваш премиум активирован<h2>' if user.pro>0 else f'<h2>Здравствуйте, {user.name}.'
     txt+='<p></p>'
     txt+=f'<h3>Сегодня написано: {counts} постов<br>Всего поставлено лайков: {likes}<br>Школьников в теме: {len(connections)}<br>Обладателей премиума: {len(prem_count)}<br>Дней до 1 июля: {dataresult.days}<h3><p></p>'
     for i in res:
