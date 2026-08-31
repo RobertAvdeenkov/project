@@ -100,7 +100,7 @@ async def show(db:AsyncSession=Depends(get_db), token=Cookie(), filt=Body()):
     if not res:
         return {'message':'<h2>Сообщений пока нет :(<h2>'}
     data=datetime.now()
-    ex1=select(func.count()).select_from(Message).filter(Message.created_at<datetime(year=data.year,month=data.month,day=data.day, hour=23,minutes=59), Message.created_at>datetime(year=data.year,month=data.month,day=data.day))
+    ex1=select(func.count()).select_from(Message).filter(Message.created_at<datetime(year=data.year,month=data.month,day=data.day, hour=23,minute=59), Message.created_at>datetime(year=data.year,month=data.month,day=data.day))
     counts=await db.scalar(ex1)
     likes=await db.scalar(select(func.count()).select_from(Like))
     ex=select(User).filter(User.name==name)
